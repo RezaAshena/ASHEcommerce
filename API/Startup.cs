@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 using System.Linq;
 
 namespace API
@@ -47,11 +48,16 @@ namespace API
 
                     var errorResponse = new ApiValidationErrorResponse
                     {
-                        Errors=errors
+                        Errors = errors
                     };
 
                     return new BadRequestObjectResult(errorResponse);
                 };
+            });
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "AshEcommerce API", Version = "v1" });
             });
         }
 
@@ -69,6 +75,8 @@ namespace API
             app.UseRouting();
             app.UseStaticFiles();
 
+            app.UseSwagger();
+            app.UseSwaggerUI(c => { c.SwaggerEndpoint("?swagger/V1/swagger.json", "AshEcommerce API v1"); });
             app.UseEndpoints(endpoints =>
             {
                 //endpoints.MapGet("/", async context =>
