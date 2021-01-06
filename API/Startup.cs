@@ -43,7 +43,7 @@ namespace API
 
             app.UseHttpsRedirection();
             app.UseRouting();
-
+            app.UseStaticFiles();
 
             app.UseEndpoints(endpoints =>
             {
