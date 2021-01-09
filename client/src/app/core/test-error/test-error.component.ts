@@ -9,6 +9,7 @@ import { environment } from '../../../environments/environment';
 })
 export class TestErrorComponent implements OnInit {
   baseUrl = environment.apiUrl;
+  validationErrors: any;
 
   constructor(private http:HttpClient) { }
 
@@ -47,7 +48,8 @@ export class TestErrorComponent implements OnInit {
     this.http.get(this.baseUrl + 'products/fortytwo').subscribe(Response => {
       console.log(Response);
     }, error => {
-      console.log(Response);
+        console.log(Response);
+        this.validationErrors = error.errors;
     });
   }
 
