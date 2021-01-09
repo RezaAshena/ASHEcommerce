@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { IProduct } from '../../shared/models/product';
 import { ShopService } from '../shop.service';
 
@@ -11,14 +12,14 @@ export class ProductDetailsComponent implements OnInit {
 
   product: IProduct;
 
-  constructor(private shopService: ShopService) { }
+  constructor(private shopService: ShopService, private activateRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.loadProduct();
   }
 
   loadProduct() {
-    this.shopService.getProduct(5).subscribe(product => {
+    this.shopService.getProduct(+this.activateRoute.snapshot.paramMap.get('id')).subscribe(product => {
       this.product = product;
     }, error => {
         console.log(error);
