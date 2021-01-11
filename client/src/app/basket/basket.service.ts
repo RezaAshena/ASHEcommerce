@@ -22,6 +22,7 @@ export class BasketService {
       .pipe(
         map((basket: IBasket) => {
           this.basketSource.next(basket);
+          console.log(this.getCurrentBasketValue());
         })
       );
   }
@@ -44,14 +45,14 @@ export class BasketService {
   addItemToBasket(item: IProduct, quantity = 1) {
     const itemToAdd: IBasketItem = this.mapProductItemToBasketItem(item, quantity);
     const basket = this.getCurrentBasketValue() ?? this.createBasket();
-    console.log(basket);
+    //console.log(basket);
     basket.items = this.addOrUpdateItem(basket.items, itemToAdd, quantity);
     this.setBasket(basket);
   }
 
    private addOrUpdateItem(items: IBasketItem[], itemToAdd: IBasketItem, quantity: number): IBasketItem[] {
 
-     console.log(items);
+     //console.log(items);
      const index = items.findIndex(i => i.id === itemToAdd.id);
 
      if (index === -1) {
