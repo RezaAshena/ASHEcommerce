@@ -24,6 +24,7 @@ namespace Infrastructure.Identity
                         FirstName = "Reza",
                         LastName = "Ashena",
                         Street = "10 Main Street",
+                        City="Toronto",
                         State = "ON",
                         ZipCode = "90210"
                     }
