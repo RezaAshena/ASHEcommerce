@@ -43,7 +43,7 @@ namespace API
             });
 
             services.AddApplicationServices();
-            services.AddIdentityServices();
+            services.AddIdentityServices(_config);
             services.AddSwaggerDocumentation();
             services.AddCors(Opt =>
             {
@@ -69,6 +69,9 @@ namespace API
             app.UseStaticFiles();
 
             app.UseCors("CorsPolicy");
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseSwaggerDocumention();
 
