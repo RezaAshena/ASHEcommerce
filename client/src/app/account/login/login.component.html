@@ -1,12 +1,12 @@
 <main class="form-signin">
   <div class="d-flex justify-content-center mt-5">
     <div class="col-3">
-      <form>
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
         <h1 class="h3 mb-3 fw-normal">Login</h1>
         <label for="inputEmail" class="visually-hidden">Email address</label>
-        <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus="">
+        <input formControlName="email" type="email" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus="">
         <label for="inputPassword" class="visually-hidden">Password</label>
-        <input type="password" id="inputPassword" class="form-control" placeholder="Password" required="">
+        <input formControlName="password" type="password" id="inputPassword" class="form-control" placeholder="Password" required="">
         <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
       </form>
     </div>
