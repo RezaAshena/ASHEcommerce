@@ -4,10 +4,28 @@
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
         <h1 class="h3 mb-3 fw-normal">Login</h1>
         <label for="inputEmail" class="visually-hidden">Email address</label>
+        <span class="text-danger"
+              *ngIf="loginForm.get('email').invalid
+              && loginForm.get('email').touched
+              && loginForm.get('email').errors['required']">
+           is required
+        </span>
+        <span class="text-danger"
+              *ngIf="loginForm.get('email').invalid
+              && loginForm.get('email').touched
+              && loginForm.get('email').errors['pattern']">
+            is not valid
+        </span>
         <input formControlName="email" type="email" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus="">
         <label for="inputPassword" class="visually-hidden">Password</label>
+        <span class="text-danger"
+              *ngIf="loginForm.get('password').invalid
+              && loginForm.get('password').touched
+              && loginForm.get('password').errors['required']">
+           is required
+        </span>
         <input formControlName="password" type="password" id="inputPassword" class="form-control" placeholder="Password" required="">
-        <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
+        <button [disabled]="loginForm.invalid" class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
       </form>
     </div>
 
