@@ -136,6 +136,7 @@ export class BasketService {
       brand: item.productBrand,
       type: item.productType
     };
+
   }
 
 
