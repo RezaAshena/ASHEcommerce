@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -39,5 +40,43 @@ namespace API.Controllers
 
             return Ok(order);
         }
+
+        [HttpGet]
+        public async Task<ActionResult<IReadOnlyList<Order>>> GetOrdersForUser()
+        {
+            var email = HttpContext.User.RetriveEmailFromPrincipal();
+
+            var orders = await _orderService.GetOrdersForUserAsync(email);
+
+            return Ok(orders);
+        }
+
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Order>> GetOrderByIdForUser(int id)
+        {
+            var email = HttpContext.User.RetriveEmailFromPrincipal();
+            var order = await _orderService.GetOrderByIdAsync(id, email);
+            if (order == null)
+            {
+                var apiResponse = new ApiResponse((int)HttpStatusCode.NotFound);
+
+                return NotFound(apiResponse);
+            }
+
+            return Ok(order);
+        }
+
+
+        [HttpGet("deliveryMethods")]
+        public async Task<ActionResult<IReadOnlyList<DeliveryMethod>>> GetDeliveryMethods()
+        {
+            var methods = await _orderService.GetDeliveryMethodsAsync();
+
+            return Ok(methods);
+        }
+
+
+
     }
 }
