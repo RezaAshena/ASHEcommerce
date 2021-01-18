@@ -1,7 +1,9 @@
 <div [formGroup]="checkoutForm" class="mt-4">
   <div class="d-flex justify-content-between align-items-center">
     <h4>Shipping address</h4>
-    <button class="btn btn-outline-success mb-3">
+    <button (click)="saveUserAddress()" class="btn btn-outline-success mb-3"
+            [disabled]="!checkoutForm.get('addressForm').valid ||
+            !checkoutForm.get('addressForm').dirty">
       Save as default address
     </button>
   </div>
