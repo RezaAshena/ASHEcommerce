@@ -33,10 +33,10 @@ namespace Infrastructure.Services
 
             var shippingPrice = 0m;
 
-            if (basket.DeliveryMeythodId.HasValue)
+            if (basket.DeliveryMethodId.HasValue)
             {
                 var deliveryMethod = await _unitOfWork.Repository<DeliveryMethod>()
-                    .GetByIdAsync((int)basket.DeliveryMeythodId);
+                    .GetByIdAsync((int)basket.DeliveryMethodId);
                 shippingPrice = deliveryMethod.Price;
             }
 
@@ -53,6 +53,7 @@ namespace Infrastructure.Services
             var service = new PaymentIntentService();
 
             PaymentIntent intent;
+
             if (string.IsNullOrEmpty(basket.PaymentIntentId))
             {
                 var options = new PaymentIntentCreateOptions
