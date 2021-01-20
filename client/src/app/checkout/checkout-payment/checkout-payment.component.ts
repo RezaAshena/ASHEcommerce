@@ -15,7 +15,7 @@ declare var Stripe;
   templateUrl: './checkout-payment.component.html',
   styleUrls: ['./checkout-payment.component.scss']
 })
-export class CheckoutPaymentComponent implements AfterViewInit , OnDestroy {
+export class CheckoutPaymentComponent implements AfterViewInit, OnDestroy {
   @Input() checkoutForm: FormGroup;
   @ViewChild('cardNumber', { static: true }) cardNumberElement: ElementRef;
   @ViewChild('cardExpiry', { static: true }) cardExpiryElement: ElementRef;
@@ -30,7 +30,7 @@ export class CheckoutPaymentComponent implements AfterViewInit , OnDestroy {
 
 
   constructor(private basketService: BasketService, private checkoutService: CheckoutService,
-    private toastr: ToastrService, private router:Router) { }
+    private toastr: ToastrService, private router: Router) { }
 
   ngAfterViewInit() {
     this.stripe = Stripe('pk_test_51IB8anBWwuKDicumLWkZQGk0S9h3uhDBWkaZoMpuYCbLHIlodKDlYiIYI2WZcYFB2kWY3nz009HOwGtchis0e95200Bipt3kkp');
@@ -55,7 +55,7 @@ export class CheckoutPaymentComponent implements AfterViewInit , OnDestroy {
     this.cardCvc.destroy();
   }
 
-  onChange({error}) {
+  onChange({ error }) {
     if (error) {
       this.cardErrors = error.message;
     } else {
@@ -68,10 +68,25 @@ export class CheckoutPaymentComponent implements AfterViewInit , OnDestroy {
     const orderToCreate = this.getOrderToCreate(basket);
     this.checkoutService.createOrder(orderToCreate).subscribe((order: IOrder) => {
       this.toastr.success('Order created successfuly');
-      this.basketService.deleteLocalBasket(basket.id);
-      const navigationExtras: NavigationExtras = { state: order };
-      this.router.navigate(['checkout/success'], navigationExtras);
-      console.log(order);
+      this.stripe.confirmCardPayment(basket.clientSecret, {
+        payment_method: {
+          card: this.cardNumber,
+          billing_details: {
+            name: this.checkoutForm.get('paymentForm').get('nameOnCard').value
+          }
+        }
+      }).then(result => {
+        console.log(result);
+        if (result.paymentIntent) {
+          this.basketService.deleteLocalBasket(basket.id);
+          const navigationExtras: NavigationExtras = { state: order };
+          this.router.navigate(['checkout/success'], navigationExtras);
+          //console.log(order);
+        } else {
+          this.toastr.error('Payment error');
+        }
+      });
+
     }, error => {
       this.toastr.error(error.message);
       console.log(error);
@@ -85,6 +100,6 @@ export class CheckoutPaymentComponent implements AfterViewInit , OnDestroy {
       shipToAddress: this.checkoutForm.get('addressForm').value
     };
 
-    }
+  }
 
 }
