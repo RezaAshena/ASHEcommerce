@@ -3,20 +3,27 @@ using Core.Entities;
 using Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Stripe;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Order = Core.Entities.OrderAggregate.Order;
 
 namespace API.Controllers
 {
     public class PaymentsController : BaseApiController
     {
         private readonly IPaymentService _paymentService;
+        private readonly ILogger<IPaymentService> _logger;
+        private const string whSecret = "";
 
-        public PaymentsController(IPaymentService paymentService)
+        public PaymentsController(IPaymentService paymentService, ILogger<IPaymentService> logger)
         {
             _paymentService = paymentService;
+            _logger = logger;
         }
 
         [Authorize]
@@ -28,6 +35,35 @@ namespace API.Controllers
             if (basket == null) return BadRequest(new ApiResponse(400, "Problem with your basket"));
 
             return basket;
+        }
+
+        [HttpPost("webhook")]
+        public async Task<ActionResult> StripeWebhook()
+        {
+            var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
+
+            var stripeEvent = EventUtility.ConstructEvent(json, Request.Headers["Stripe-Signature"], whSecret);
+
+            PaymentIntent intent;
+            Order order;
+
+            switch (stripeEvent.Type)
+            {
+                case "payment_intent.succeeded":
+                    intent = (PaymentIntent)stripeEvent.Data.Object;
+                    _logger.LogInformation("Payment Succeeded: ", intent.Id);
+                    //Todo: Update order with new status
+                    break;
+
+                case "payment_intent.failed":
+                    intent = (PaymentIntent)stripeEvent.Data.Object;
+                    _logger.LogInformation("Payment Failed: ", intent.Id);
+                    //Todo: Update order status
+                    break;
+            }
+
+            return new EmptyResult();
+
         }
 
 
