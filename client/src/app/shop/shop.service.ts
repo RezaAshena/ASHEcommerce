@@ -21,7 +21,27 @@ export class ShopService {
 
   constructor(private http: HttpClient) { }
 
-  getProducts() {
+  getProducts(useCache: boolean) {
+
+    if (useCache === false) {
+      this.product = [];
+    }
+
+    if (this.product.length > 0 && useCache === true) {
+      const pageRecived = Math.ceil(this.product.length / this.shopParams.pageSize);
+
+      if (this.shopParams.pageNumber <= pageRecived) {
+        this.pagination.data =
+          this.product.slice((this.shopParams.pageNumber - 1) * this.shopParams.pageSize,
+            this.shopParams.pageNumber * this.shopParams.pageSize);
+
+        return of(this.pagination);
+      }
+
+    }
+
+
+
     let params = new HttpParams();
 
     if (this.shopParams.brandId !== 0) {
