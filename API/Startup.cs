@@ -24,24 +24,44 @@ namespace API
         {
             _config = config;
         }
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
+
+        public void ConfigureDevelopmentServices(IServiceCollection services)
+        {
+            services.AddDbContext<StoreContext>(x =>
+                x.UseSqlServer(_config.GetConnectionString("DefaultConnectionDev")));
+
+            services.AddDbContext<AppIdentityDbContext>(x =>
+            {
+                x.UseSqlServer(_config.GetConnectionString("IdentityConnectionDev"));
+            });
+
+            ConfigureServices(services);
+        }
+
+        public void ConfigureProductionServices(IServiceCollection services)
+        {
+            services.AddDbContext<StoreContext>(x =>
+                x.UseMySql(_config.GetConnectionString("DefaultConnection")));
+
+            services.AddDbContext<AppIdentityDbContext>(x =>
+            {
+                x.UseMySql(_config.GetConnectionString("IdentityConnection"));
+            });
+
+            ConfigureServices(services);
+        }
+
+
         public void ConfigureServices(IServiceCollection services)
         {
 
             services.AddAutoMapper(typeof(MappingProfiles));
             services.AddControllers();
-            services.AddDbContext<StoreContext>(x =>
-            x.UseSqlServer(_config.GetConnectionString("DefaultConnection")));
 
-            services.AddDbContext<AppIdentityDbContext>(x =>
+            services.AddSingleton<IConnectionMultiplexer>(c =>
             {
-                x.UseSqlServer(_config.GetConnectionString("IdentityConnection"));
-            });
-
-            services.AddSingleton<IConnectionMultiplexer>(c => {
-            var configuration = ConfigurationOptions.Parse(_config.GetConnectionString("Redis"),true);
-            return ConnectionMultiplexer.Connect(configuration);
+                var configuration = ConfigurationOptions.Parse(_config.GetConnectionString("Redis"), true);
+                return ConnectionMultiplexer.Connect(configuration);
             });
 
             services.AddApplicationServices();
