@@ -25,19 +25,6 @@ namespace API
             _config = config;
         }
 
-        public void ConfigureDevelopmentServices(IServiceCollection services)
-        {
-            services.AddDbContext<StoreContext>(x =>
-                x.UseSqlServer(_config.GetConnectionString("DefaultConnectionDev")));
-
-            services.AddDbContext<AppIdentityDbContext>(x =>
-            {
-                x.UseSqlServer(_config.GetConnectionString("IdentityConnectionDev"));
-            });
-
-            ConfigureServices(services);
-        }
-
         public void ConfigureProductionServices(IServiceCollection services)
         {
             services.AddDbContext<StoreContext>(x =>
@@ -50,6 +37,21 @@ namespace API
 
             ConfigureServices(services);
         }
+
+        public void ConfigureDevelopmentServices(IServiceCollection services)
+        {
+            services.AddDbContext<StoreContext>(x =>
+                x.UseMySql(_config.GetConnectionString("DefaultConnection")));
+
+            services.AddDbContext<AppIdentityDbContext>(x =>
+            {
+                x.UseMySql(_config.GetConnectionString("IdentityConnection"));
+            });
+
+            ConfigureServices(services);
+        }
+
+
 
 
         public void ConfigureServices(IServiceCollection services)
