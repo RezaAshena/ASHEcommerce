@@ -23,7 +23,7 @@ namespace Infrastructure.Data.SeedData
                 if (!contex.ProductBrands.Any())
                 {
                     var brandData =
-                        File.ReadAllText(path + @"/Data/SeedData/Brands.json");
+                        File.ReadAllText(path + @"/Data/SeedData/brands.json");
                     var brands = JsonSerializer.Deserialize<List<ProductBrand>>(brandData);
 
                     foreach (var item in brands)
