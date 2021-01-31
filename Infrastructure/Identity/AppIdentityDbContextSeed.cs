@@ -10,27 +10,52 @@ namespace Infrastructure.Identity
 {
     public class AppIdentityDbContextSeed
     {
-        public static async Task SeedUsersAsync(UserManager<AppUser> userManager)
+        public static async Task SeedUsersAsync(UserManager<AppUser> userManager, RoleManager<AppRole> roleManager)
         {
             if (!userManager.Users.Any())
             {
-                var user = new AppUser
+                var users = new List<AppUser>
                 {
-                    DisplayName = "Reza",
-                    Email = "ashena.reza@gmail.com",
-                    UserName = "ashena.reza@gmail.com",
-                    Address = new Address
+                    new AppUser
                     {
-                        FirstName = "Reza",
-                        LastName = "Ashena",
-                        Street = "10 Main Street",
-                        City="Toronto",
-                        State = "ON",
-                        ZipCode = "90210"
+                        DisplayName = "Reza",
+                        Email = "ashena.reza@gmail.com",
+                        UserName = "ashena.reza@gmail.com",
+                        Address = new Address
+                        {
+                            FirstName = "Reza",
+                            LastName = "Ashena",
+                            Street = "10 The Street",
+                            City = "Toronto",
+                            State = "ON",
+                            ZipCode = "90210"
+                        }
+                    },
+                    new AppUser
+                    {
+                        DisplayName = "Admin",
+                        Email = "admin@test.com",
+                        UserName = "admin@test.com"
                     }
                 };
 
-                await userManager.CreateAsync(user, "P@ssw0rd");
+                var roles = new List<AppRole>
+                {
+                    new AppRole {Name = "Admin"},
+                    new AppRole {Name = "Member"}
+                };
+
+                foreach (var role in roles)
+                {
+                    await roleManager.CreateAsync(role);
+                }
+
+                foreach (var user in users)
+                {
+                    await userManager.CreateAsync(user, "P@ssword");
+                    await userManager.AddToRoleAsync(user, "Member");
+                    if (user.Email == "admin@test.com") await userManager.AddToRoleAsync(user, "Admin");
+                }
             }
         }
     }
