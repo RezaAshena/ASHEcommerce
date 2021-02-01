@@ -52,7 +52,7 @@ namespace Infrastructure.Identity
 
                 foreach (var user in users)
                 {
-                    await userManager.CreateAsync(user, "P@ssword");
+                    await userManager.CreateAsync(user, "P@ssw0rd");
                     await userManager.AddToRoleAsync(user, "Member");
                     if (user.Email == "admin@test.com") await userManager.AddToRoleAsync(user, "Admin");
                 }
