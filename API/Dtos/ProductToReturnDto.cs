@@ -21,5 +21,6 @@ namespace API.Dtos
 
         public string ProductBrand { get; set; }
 
+        public IEnumerable<PhotoToReturnDto> Photos { get; set; }
     }
 }
