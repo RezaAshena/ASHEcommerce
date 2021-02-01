@@ -5,7 +5,7 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { PagingHeaderComponent } from './components/paging-header/paging-header.component';
 import { PagerComponent } from './components/pager/pager.component';
 import { OrderTotalsComponent } from './components/order-totals/order-totals.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TextInputComponent } from './components/text-input/text-input.component';
 import { CdkStepperModule } from '@angular/cdk/stepper';
@@ -14,10 +14,14 @@ import { BasketSummaryComponent } from './components/basket-summary/basket-summa
 import { RouterModule } from '@angular/router';
 import { CurrencyMaskModule } from 'ng2-currency-mask';
 import { NgxGalleryModule } from '@kolkov/ngx-gallery';
+import { TabsModule } from 'ngx-bootstrap/tabs';
+import { PhotoWidgetComponent } from './components/photo-widget/photo-widget.component';
+import { ImageCropperModule } from 'ngx-image-cropper';
+import { NgxDropzoneModule } from 'ngx-dropzone';
 
 
 @NgModule({
-  declarations: [PagingHeaderComponent, PagerComponent, OrderTotalsComponent, TextInputComponent, StepperComponent, BasketSummaryComponent],
+  declarations: [PagingHeaderComponent, PagerComponent, OrderTotalsComponent, TextInputComponent, StepperComponent, BasketSummaryComponent, PhotoWidgetComponent],
   imports: [
     CommonModule,
     PaginationModule.forRoot(),
@@ -28,7 +32,10 @@ import { NgxGalleryModule } from '@kolkov/ngx-gallery';
     CdkStepperModule,
     RouterModule,
     CurrencyMaskModule,
-    NgxGalleryModule
+    NgxGalleryModule,
+    TabsModule.forRoot(),
+    NgxDropzoneModule,
+    ImageCropperModule
   ],
   exports: [
     PaginationModule,
@@ -44,7 +51,11 @@ import { NgxGalleryModule } from '@kolkov/ngx-gallery';
     StepperComponent,
     BasketSummaryComponent,
     CurrencyMaskModule,
-    NgxGalleryModule
+    NgxGalleryModule,
+    TabsModule,
+    NgxDropzoneModule,
+    ImageCropperModule,
+    PhotoWidgetComponent
   ]
 })
 export class SharedModule { }
